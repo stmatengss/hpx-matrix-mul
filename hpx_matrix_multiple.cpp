@@ -1,4 +1,4 @@
-// #include <hpx/hpx_main.hpp>
+#include <hpx/hpx_init.hpp>
 #include <hpx/include/iostreams.hpp>
 #include <hpx/config.hpp>
 #include <hpx/include/parallel_for_each.hpp>
@@ -39,6 +39,16 @@ void mul(matrix m1, matrix m2, matrix &res) {
     });
 }
 
+void print_mat(matrix mat) {
+
+    for (std::size_t i = 0; i < mat.size(); i++) {
+        for (std::size_t j = 0; j < mat.size(); j++)
+            std::cout << mat[i].second[j] << " ";
+        std::cout << "\n";
+    }
+
+}
+
 int hpx_main(hpx::program_options::variables_map &vm) {
 
     int len = vm["len"].as<int>();
@@ -58,8 +68,11 @@ int hpx_main(hpx::program_options::variables_map &vm) {
 
     gen_matrix(m1);
     gen_matrix(m2);
+    gen_matrix(res);
 
     mul(m1, m2, res);
+
+    print_mat(res);   
 
     std::uint64_t elapsed = hpx::util::high_resolution_clock::now() - t;
 
@@ -74,9 +87,7 @@ int main(int argc, char* argv[])
     hpx::program_options::options_description od;
     od.add_options()("len", hpx::program_options::value<int>());
 
-    hpx::program_options::store(hpx::program_options::command_line_parser(argc, argv).options(od).run(), vm);
+    //hpx::program_options::store(hpx::program_options::command_line_parser(argc, argv).options(od).run(), vm);
 
-    hpx::init(od, 0, nullptr);
-
-    return EXIT_SUCCESS;
+    return hpx::init(od, argc, argv);
 }

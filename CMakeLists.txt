@@ -5,6 +5,8 @@ list(APPEND CMAKE_PREFIX_PATH "$HOME/hpx")
 
 find_package(HPX REQUIRED)
 
+set(CMAKE_CXX_FLAGS "-O0 -ggdb")
+
 add_hpx_executable(${CMAKE_PROJECT_NAME}
 	SOURCES ${CMAKE_PROJECT_NAME}.cpp
         COMPONENT_DEPENDENCIES iostreams
